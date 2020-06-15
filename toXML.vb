@@ -48,10 +48,11 @@ Sub toXML()
         i = i + 1
     Next activeRowIndex
     xml = xml & Join(sBuff, "")
-
-
     xml = xml & "</ExcelField>"
-    Cells(1, 1).Value = xml
+
+    Open Application.ThisWorkbook.Path & "/" & Application.ThisWorkbook.Name & ".xml" For Output As #1
+      Print #1, xml
+    Close #1
 
 End Sub
 
