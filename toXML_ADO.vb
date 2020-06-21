@@ -1,57 +1,46 @@
 Sub toXML()
-
     Application.ScreenUpdating = False
 
-    Dim sname As String
-    Dim headerTotalRows As Integer
-    Dim lastRowIndex As Integer
-    Dim lastColIndex As Integer
-    Dim ignoreCols As Integer
     Dim activeRowIndex As Integer
     Dim activeColIndex As Integer
-    Dim oneRowCharCount As Integer
-    Dim headerRow As Integer
-    Dim table()
     Dim sBuff() As String
     Dim tmpStr As String
     Dim targetHeader As String
     Dim xml As String
-    Dim wrapper As String
-    Dim container As String
-    Dim charCode As String
-    Dim savePath As String
-    Dim i As Integer
 
     ' ADOライブラリの読み込み
     Dim ado As Object
     Set ado = CreateObject("ADODB.Stream")
 
     ' ヘッダーの合計業
-    headerTotalRows = 2
+    Dim headerTotalRows As Integer:headerTotalRows = 2
     ' ヘッダー名参照行の指定
-    headerRow = 1
+    Dim headerRow As Integer:headerRow = 1
     ' 左端から無視する列数
-    ignoreCols = 3
+    Dim ignoreCols As Integer:ignoreCols = 3
     ' ルート要素のタグ名
-    wrapper = "DocumentElement"
+    Dim wrapper As String:wrapper = "DocumentElement"
     ' 各データを囲むタグ名
-    container = "MDHLP"
+    Dim container As String:container = "MDHLP"
     ' 文字コード
-    charCode = "UTF-8" ' or Shift_JIS
+    Dim charCode As String:charCode = "UTF-8" ' or Shift_JIS
     ' 保存先
-    savePath = Application.ThisWorkbook.Path & "/" & Application.ThisWorkbook.Name & ".xml"
+    Dim savePath As String:savePath = Application.ThisWorkbook.Path & "/" & Application.ThisWorkbook.Name & ".xml"
 
-    lastRowIndex = Cells(Rows.Count, 1).End(xlUp).Row
-    lastColIndex = Cells(1, Columns.Count).End(xlToLeft).Column
+    Dim lastRowIndex As Integer:lastRowIndex = Cells(Rows.Count, 1).End(xlUp).Row
+    Dim lastColIndex As Integer:lastColIndex = Cells(1, Columns.Count).End(xlToLeft).Column
 
-    table = Range(Cells(1, ignoreCols + 1), Cells(lastRowIndex, lastColIndex))
-    ' header: table(headerRow, [?数値])
+    ' header: table(headerRow, [列])
+    Dim table():Set table = Range(Cells(1, ignoreCols + 1), Cells(lastRowIndex, lastColIndex))
 
+    ' XMLを塊ごとに格納するための配列
     ReDim sBuff(1 To UBound(table, 1) * UBound(table, 2) * 2)
 
+    ' XML組み立て
     xml = "<?xml version=""1.0"" encoding=""" & charCode & """ standalone=""yes""?>" & vbCrLf
     xml = xml & Space(2) & "<" & wrapper & ">" & vbCrLf
-    i = 1
+
+    Dim i As Integer:i = 1
     For activeRowIndex = (headerTotalRows + 1) To lastRowIndex
         sBuff(i) = "<" & container & ">" & vbCrLf
         i = i + 1
@@ -76,7 +65,6 @@ Sub toXML()
     ado.WriteText xml, 0 ' adWriteChar
     ado.SaveToFile savePath, 2 ' adSaveCreateOverWrite
     ado.Close
-
     Set ado = Nothing
 
 End Sub
