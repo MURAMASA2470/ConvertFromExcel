@@ -33,9 +33,9 @@ Sub toXML()
     ' 左端から無視する列数
     ignoreCols = 3
     ' ルート要素のタグ名
-    wrapper = "Wrapper"
+    wrapper = "DocumentElement"
     ' 各データを囲むタグ名
-    container = "Container"
+    container = "MDHLP"
     ' 文字コード
     charCode = "UTF-8" ' or Shift_JIS
     ' 保存先
@@ -49,22 +49,22 @@ Sub toXML()
 
     ReDim sBuff(1 To UBound(table, 1) * UBound(table, 2) * 2)
 
-    xml = "<?xml version=""1.0"" encoding=""" & charCode & """?>" & vbCrLf
-    xml = xml & "<" & wrapper & ">" & vbCrLf
+    xml = "<?xml version=""1.0"" encoding=""" & charCode & """ standalone=""yes""?>" & vbCrLf
+    xml = xml & Space(2) & "<" & wrapper & ">" & vbCrLf
     i = 1
     For activeRowIndex = (headerTotalRows + 1) To lastRowIndex
-        sBuff(i) = "<" & container & ">" & vbCrLf & vbTab & "<RowNum>" & activeRowIndex - headerTotalRows & "</RowNum>" & vbCrLf
+        sBuff(i) = "<" & container & ">" & vbCrLf
         i = i + 1
         For activeColIndex = (ignoreCols + 1) To lastColIndex
           targetHeader = table(headerRow, activeColIndex - ignoreCols)
-          tmpStr = tmpStr & vbTab & "<" & targetHeader & ">"
+          tmpStr = tmpStr & Space(4) & "<" & targetHeader & ">"
           tmpStr = tmpStr & Cells(activeRowIndex, activeColIndex).Value
           tmpStr = tmpStr & "</" & targetHeader & ">" & vbCrLf
           sBuff(i) = tmpStr
           tmpStr = ""
           i = i + 1
         Next activeColIndex
-        sBuff(i) = "</" & container & ">" & vbCrLf
+        sBuff(i) = Space(2) & "</" & container & ">" & vbCrLf
         i = i + 1
     Next activeRowIndex
     xml = xml & Join(sBuff, "")
