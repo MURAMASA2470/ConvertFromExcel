@@ -22,12 +22,14 @@ Sub toXML()
     Dim savePath As String
     Dim i As Integer
 
+    ' ADOライブラリの読み込み
     Dim ado As Object
     Set ado = CreateObject("ADODB.Stream")
+
     ' ヘッダーの合計業
     headerTotalRows = 2
     ' ヘッダー名参照行の指定
-    headerRow = 2
+    headerRow = 1
     ' 左端から無視する列数
     ignoreCols = 3
     ' ルート要素のタグ名
@@ -35,16 +37,15 @@ Sub toXML()
     ' 各データを囲むタグ名
     container = "Container"
     ' 文字コード
-    charCode = "UTF-8" ' Shift_JIS
+    charCode = "UTF-8" ' or Shift_JIS
     ' 保存先
     savePath = Application.ThisWorkbook.Path & "/" & Application.ThisWorkbook.Name & ".xml"
-
 
     lastRowIndex = Cells(Rows.Count, 1).End(xlUp).Row
     lastColIndex = Cells(1, Columns.Count).End(xlToLeft).Column
 
     table = Range(Cells(1, ignoreCols + 1), Cells(lastRowIndex, lastColIndex))
-    ' header: table(headerRow, [?h??])
+    ' header: table(headerRow, [?数値])
 
     ReDim sBuff(1 To UBound(table, 1) * UBound(table, 2) * 2)
 
